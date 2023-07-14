@@ -1,19 +1,16 @@
 var express = require('express');
+var bodyParser = require('body-parser');
+var multer = require('multer');
+const cookieParser = require('cookie-parser');
+var upload = multer();
+
 var app = express();
-var cookieParser = require('cookie-parser');
+
 app.use(cookieParser());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(upload.array());
 
-app.get('/',function(req,res){
-    res.cookie('name','njoki').send('cookie-set');
-});
-
-app.get('/see',function(req,res){
-    console.log('Cookies: ', req.cookies);
-});
-app.get('/clear_cookie_njoki',function(req,res){
-    res.clearCookie('name');
-    res.send('Cookie njoki cleared');
-    console.log('Cookies: ', req.cookies);
-});
-
+var movies = require('./movies.js');
+app.use('/movies',movies);
 app.listen(3000);
